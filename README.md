@@ -2,6 +2,6 @@
 Add your account.txt
 
 Format:
-OOXX = XXX\q
-XXOO = XXX\q
+OOXX = XXX\newline
+XXOO = XXX\newline
 ...
