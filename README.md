@@ -1,10 +1,12 @@
 # QwQ_Bot
-Add your account.txt
+Add your (email password name name_at url urlcommon) to account.txt
 
 Format:
+:::info
+email = XXX 
 
-OOXX = XXX 
-
-XXOO = XXX 
+password = XXX 
 
 ...
+:::
+
