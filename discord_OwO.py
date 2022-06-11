@@ -1,14 +1,18 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
 import time
 import atexit
 import random
 import winsound
+import requests
 
 beepboop = False
 
-little_star = ["do","do","so","so","la","la","so"," ",
-               "fa","fa","mi","mi","re","re","do"]
+songBeepBoop = ["C4","C4","G4","G4","A4","A4","G4"," ", # little star
+               "F4","F4","E4","E4","D4","D4","C4"]
+songEnd = ["G4","E4","E4"," ","F4","D4","D4"," ",   # little bee
+              "C4","D4","E4","F4","G4","G4","G4"]
 
 def getAccount():
     param = dict()
@@ -39,22 +43,42 @@ def playmusic(song):
         else:
             winsound.Beep(scale,duration)
             time.sleep(rest*0.001)
-    freq = {"do":262, "re":294, "mi":330, "fa":349, "so":392, "la":440, "si":494, " ":" "}
+    freq = {"C4":262, "D4":294, "E4":330, "F4":349, "G4":392, "A4":440, "B4":494, " ":" "}
     for s in song:
         play(freq[s])
+def notify(token, message):
+    url = 'https://notify-api.line.me/api/notify'
+    headers = {
+      'Authorization': 'Bearer ' + token
+    }
+    data = {
+      "message": message,
+      "stickerPackageId":8525,
+      "stickerId":16581311
+    }
+    response = requests.post(url, headers=headers, data=data)
 
 if __name__ == "__main__":
     param = getAccount()
-    chrome_path = "C:/Users/aaron/Desktop/python/OwO/chromedriver.exe"    
-    browser = webdriver.Chrome(chrome_path)
+    
+    ini_button = "marginTop8-24uXGp marginCenterHorz-574Oxy linkButton-2ax8wP button-f2h6uQ lookLink-15mFoz lowSaturationUnderline-Z6CW6z colorLink-1Md3RZ sizeMin-DfpWCE grow-2sR_-F"
+    browser = webdriver.Chrome(param["chrome_path"])
     browser.get(param["url"])
-
+    
+    browser.implicitly_wait(10)
+    
     time.sleep(5)
+    try:
+        button = browser.find_element(by=By.XPATH, value=f'//button[@class="{ini_button}"]')
+        button.click()
+    except:
+        pass
+    time.sleep(3)
 
     #browser.refresh()
-    email = browser.find_element_by_xpath('//input[@class="inputDefault-3FGxgL input-2g-os5 inputField-2RZxdl"]')
-    password = browser.find_element_by_xpath('//input[@type="password"]')
-    button = browser.find_element_by_xpath("//button[@type='submit']")
+    email = browser.find_element(by=By.XPATH, value='//input[@class="inputDefault-3FGxgL input-2g-os5 inputField-2RZxdl"]')
+    password = browser.find_element(by=By.XPATH, value='//input[@type="password"]')
+    button = browser.find_element(by=By.XPATH, value="//button[@type='submit']")
 
     email.send_keys(param["email"])
     password.send_keys(param["password"])
@@ -64,18 +88,17 @@ if __name__ == "__main__":
     atexit.register(close_driver)
 
     time.sleep(10)
-    cp = [{'prob':0.00, 'command':'wh'},
+    cp = [{'prob':1.00, 'command':'wh'},
           {'prob':1.00, 'command':'wb'},
+          {'prob':0.70, 'command':'wdt'},
           {'prob':0.10, 'command':'wlvl'},
-          {'prob':0.01, 'command':'wcl'},
           {'prob':0.20, 'command':'whb'},
-          {'prob':0.01, 'command':'wq'},
-          {'prob':0.10, 'command':'wcash'},
-          {'prob':0.10, 'command':'wz'}]
+          {'prob':0.10, 'command':'wz'},
+          {'prob':0.00, 'command':'owo'},
+          {'prob':0.00, 'command':'wcf h'}]
     
-    while True:
-        input_text = browser.find_element_by_xpath('//div[@role="textbox"]')
-
+    for i in range(int(param["loop"])):
+        input_text = browser.find_element(by=By.XPATH, value='//div[@role="textbox"]')
         random.shuffle(cp)
         loop_delay = random.randint(20, 30) # time delay for the loop
         command_prob = random.random() # decide whether execute certain command or not
@@ -85,8 +108,15 @@ if __name__ == "__main__":
         for d in cp:
             c = d['command']
             p = d['prob']
-            dc_text_area = browser.find_elements_by_xpath('//*[@class="scrollerInner-2PPAp2"]/li[@class="messageListItem-ZZ7v6g"]')
-
+            while True:
+                try:
+                    dc_text_area = browser.find_elements(by=By.XPATH, value='//*[@class="scrollerInner-2PPAp2"]/li[@class="messageListItem-ZZ7v6g"]')
+                    time.sleep(1)
+                    _ = dc_text_area[-1].get_attribute("id")# if none, retry
+                    break
+                except:
+                    print("retry")
+                    continue
             dc_text_area = dc_text_area[-5:]
 
             for element in dc_text_area:
@@ -94,12 +124,13 @@ if __name__ == "__main__":
                 id = element.get_attribute("id")
                 serial = int(id.split('-')[-1])
                 # find message
-                text_el = element.find_element_by_xpath(f'//*[@id="message-content-{serial}"]')
+                text_el = element.find_element(by=By.XPATH, value=f'//*[@id="message-content-{serial}"]')
+
                 BeepBoop(text_el.text)
             if beepboop:
                 break
             if command_prob < p:
-                command_delay = random.randint(3, 6) # time delay between each command
+                command_delay = random.randint(1, 3) # time delay between each command
                 print('execute', c)
                 input_text.send_keys(c)
                 input_text.send_keys(Keys.ENTER)
@@ -109,9 +140,12 @@ if __name__ == "__main__":
         if beepboop:
             browser.get(param["urlcommon"])
             time.sleep(8)
-            input_text = browser.find_element_by_xpath('//div[@role="textbox"]')
+            input_text = browser.find_element(by=By.XPATH, value='//div[@role="textbox"]')
             input_text.send_keys(f'beepboop了 別在打字啦!!!{param["name_at"]}')
             input_text.send_keys(Keys.ENTER)
-            playmusic(little_star)
+            notify(param["token"],"BeepBoop!!!")
+            playmusic(songBeepBoop)
             break
         time.sleep(loop_delay)
+    notify(param["token"],"finish!!!")
+    playmusic(songEnd)
