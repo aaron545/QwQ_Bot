@@ -1,6 +1,9 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 import time
 import atexit
 import random
@@ -69,16 +72,16 @@ if __name__ == "__main__":
     
     time.sleep(5)
     try:
-        button = browser.find_element(by=By.XPATH, value=f'//button[@class="{ini_button}"]')
+        button = browser.find_element(By.XPATH, f'//button[@class="{ini_button}"]')
         button.click()
     except:
         pass
     time.sleep(3)
 
     #browser.refresh()
-    email = browser.find_element(by=By.XPATH, value='//input[@class="inputDefault-3FGxgL input-2g-os5 inputField-2RZxdl"]')
-    password = browser.find_element(by=By.XPATH, value='//input[@type="password"]')
-    button = browser.find_element(by=By.XPATH, value="//button[@type='submit']")
+    email = browser.find_element(By.XPATH, '//input[@class="inputDefault-3FGxgL input-2g-os5 inputField-2RZxdl"]')
+    password = browser.find_element(By.XPATH, '//input[@type="password"]')
+    button = browser.find_element(By.XPATH, "//button[@type='submit']")
 
     email.send_keys(param["email"])
     password.send_keys(param["password"])
@@ -98,7 +101,7 @@ if __name__ == "__main__":
           {'prob':0.00, 'command':'wcf h'}]
     
     for i in range(int(param["loop"])):
-        input_text = browser.find_element(by=By.XPATH, value='//div[@role="textbox"]')
+        input_text = browser.find_element(By.XPATH, '//div[@role="textbox"]')
         random.shuffle(cp)
         loop_delay = random.randint(20, 30) # time delay for the loop
         command_prob = random.random() # decide whether execute certain command or not
@@ -108,15 +111,12 @@ if __name__ == "__main__":
         for d in cp:
             c = d['command']
             p = d['prob']
-            while True:
-                try:
-                    dc_text_area = browser.find_elements(by=By.XPATH, value='//*[@class="scrollerInner-2PPAp2"]/li[@class="messageListItem-ZZ7v6g"]')
-                    time.sleep(1)
-                    _ = dc_text_area[-1].get_attribute("id")# if none, retry
-                    break
-                except:
-                    print("retry")
-                    continue
+            
+            try:
+                WebDriverWait(browser, 20, 0.5).until(EC.presence_of_element_located((By.XPATH, '//*[@class="scrollerInner-2PPAp2"]/li[@class="messageListItem-ZZ7v6g"]')))
+                dc_text_area = browser.find_elements(By.XPATH, '//*[@class="scrollerInner-2PPAp2"]/li[@class="messageListItem-ZZ7v6g"]')
+            except:
+                print(dc_text_area)
             dc_text_area = dc_text_area[-5:]
 
             for element in dc_text_area:
@@ -124,7 +124,7 @@ if __name__ == "__main__":
                 id = element.get_attribute("id")
                 serial = int(id.split('-')[-1])
                 # find message
-                text_el = element.find_element(by=By.XPATH, value=f'//*[@id="message-content-{serial}"]')
+                text_el = element.find_element(By.XPATH, f'//*[@id="message-content-{serial}"]')
 
                 BeepBoop(text_el.text)
             if beepboop:
@@ -140,7 +140,7 @@ if __name__ == "__main__":
         if beepboop:
             browser.get(param["urlcommon"])
             time.sleep(8)
-            input_text = browser.find_element(by=By.XPATH, value='//div[@role="textbox"]')
+            input_text = browser.find_element(By.XPATH, '//div[@role="textbox"]')
             input_text.send_keys(f'beepboop了 別在打字啦!!!{param["name_at"]}')
             input_text.send_keys(Keys.ENTER)
             notify(param["token"],"BeepBoop!!!")
