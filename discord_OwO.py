@@ -32,11 +32,15 @@ def BeepBoopName(text):
         return True
     else : 
         return False
+
 def BeepBoop(text):
     global beepboop
     if text.find("Beep Boop. Please DM me") != -1 or text.find("Please complete your captcha") != -1:
         if BeepBoopName(text):
             beepboop = True
+            
+def distorted(text):
+    pass
 def playmusic(song):
     def play(scale):
         duration = 400 
@@ -116,17 +120,24 @@ if __name__ == "__main__":
                 WebDriverWait(browser, 20, 0.5).until(EC.presence_of_element_located((By.XPATH, '//*[@class="scrollerInner-2PPAp2"]/li[@class="messageListItem-ZZ7v6g"]')))
                 dc_text_area = browser.find_elements(By.XPATH, '//*[@class="scrollerInner-2PPAp2"]/li[@class="messageListItem-ZZ7v6g"]')
             except:
-                print(dc_text_area)
+                pass
             dc_text_area = dc_text_area[-5:]
+            # print(dc_text_area[-1].get_attribute("outerHTML"))
 
+            
             for element in dc_text_area:
-                # get message serial
-                id = element.get_attribute("id")
-                serial = int(id.split('-')[-1])
-                # find message
-                text_el = element.find_element(By.XPATH, f'//*[@id="message-content-{serial}"]')
+                try:
+                    # get message serial
+                    id = element.get_attribute("id")
+                    # print(id)
+                    serial = int(id.split('-')[-1])
+                    # find message
+                    text_el = element.find_element(By.XPATH, f'//*[@id="message-content-{serial}"]')
 
-                BeepBoop(text_el.text)
+                    BeepBoop(text_el.text)
+                except:
+                    pass
+                    # print(element.get_attribute("outerHTML"))
             if beepboop:
                 break
             if command_prob < p:
