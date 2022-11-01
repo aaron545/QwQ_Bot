@@ -41,7 +41,7 @@ if __name__ == "__main__":
     password = browser.find_element(By.XPATH, '//input[@type="password"]')
     button = browser.find_element(By.XPATH, "//button[@type='submit']")
 
-    email.send_keys(param["email "]) ### here
+    email.send_keys(param["email"]) ### here
     password.send_keys(param["password"]) ### here
     button.click()
 

@@ -101,7 +101,7 @@ if __name__ == "__main__":
           {'prob':0.10, 'command':'wlvl'},
           {'prob':0.20, 'command':'whb'},
           {'prob':0.10, 'command':'wz'},
-          {'prob':0.00, 'command':'owo'},
+          {'prob':1.00, 'command':'owo'},
           {'prob':0.00, 'command':'wcf h'}]
     
     for i in range(int(param["loop"])):
