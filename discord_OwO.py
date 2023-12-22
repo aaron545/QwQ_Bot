@@ -117,7 +117,7 @@ if __name__ == "__main__":
         for d in cp:
             c = d['command']
             p = d['prob']
-            dc_text_area = browser.find_elements(By.XPATH, '//div[contains(@class, "messageContent__21e69")]')
+            dc_text_area = browser.find_elements(By.XPATH, '//div[contains(@class, "messageContent__21e69")]') # change here
             dc_text_area = dc_text_area[-5:]
             
             for element in dc_text_area:
