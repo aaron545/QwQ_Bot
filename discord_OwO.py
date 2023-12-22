@@ -36,6 +36,7 @@ def BeepBoopName(text):
 def BeepBoop(text):
     global beepboop
     if text.find("Beep Boop. Please DM me") != -1 or text.find("Please complete your captcha") != -1:
+        print('find name')
         if BeepBoopName(text):
             beepboop = True
             
@@ -68,7 +69,7 @@ def notify(token, message):
 if __name__ == "__main__":
     param = getAccount()
     
-    ini_button = "marginTop8-24uXGp marginCenterHorz-574Oxy linkButton-2ax8wP button-f2h6uQ lookLink-15mFoz lowSaturationUnderline-Z6CW6z colorLink-1Md3RZ sizeMin-DfpWCE grow-2sR_-F"
+    ini_button = "marginTop8-24uXGp marginCenterHorz-574Oxy linkButton-2ax8wP button-ejjZWC lookLink-13iF2K lowSaturationUnderline-Z6CW6z colorLink-34zig_ sizeMin-3Yqxk5 grow-2T4nbg"
     browser = webdriver.Chrome(param["chrome_path"])
     browser.get(param["url"])
     
@@ -83,7 +84,7 @@ if __name__ == "__main__":
     time.sleep(3)
 
     #browser.refresh()
-    email = browser.find_element(By.XPATH, '//input[@class="inputDefault-3FGxgL input-2g-os5 inputField-2RZxdl"]')
+    email = browser.find_element(By.XPATH, '//input[@class="inputDefault__80165 input_d266e7 inputField__79601"]')
     password = browser.find_element(By.XPATH, '//input[@type="password"]')
     button = browser.find_element(By.XPATH, "//button[@type='submit']")
 
@@ -97,11 +98,12 @@ if __name__ == "__main__":
     time.sleep(10)
     cp = [{'prob':1.00, 'command':'wh'},
           {'prob':1.00, 'command':'wb'},
-          {'prob':0.70, 'command':'wdt'},
-          {'prob':0.10, 'command':'wlvl'},
-          {'prob':0.20, 'command':'whb'},
-          {'prob':0.10, 'command':'wz'},
+          {'prob':0.50, 'command':'wdt'},
+          {'prob':0.00, 'command':'wlvl'},
+          {'prob':0.00, 'command':'whb'},
+          {'prob':0.00, 'command':'wz'},
           {'prob':1.00, 'command':'owo'},
+          {'prob':0.00, 'command':'ws'},
           {'prob':0.00, 'command':'wcf h'}]
     
     for i in range(int(param["loop"])):
@@ -115,26 +117,19 @@ if __name__ == "__main__":
         for d in cp:
             c = d['command']
             p = d['prob']
-            
-            try:
-                WebDriverWait(browser, 20, 0.5).until(EC.presence_of_element_located((By.XPATH, '//*[@class="scrollerInner-2PPAp2"]/li[@class="messageListItem-ZZ7v6g"]')))
-                dc_text_area = browser.find_elements(By.XPATH, '//*[@class="scrollerInner-2PPAp2"]/li[@class="messageListItem-ZZ7v6g"]')
-            except:
-                pass
+            dc_text_area = browser.find_elements(By.XPATH, '//div[contains(@class, "messageContent__21e69")]')
             dc_text_area = dc_text_area[-5:]
-            # print(dc_text_area[-1].get_attribute("outerHTML"))
-
             
             for element in dc_text_area:
                 try:
-                    # get message serial
-                    id = element.get_attribute("id")
-                    # print(id)
-                    serial = int(id.split('-')[-1])
-                    # find message
-                    text_el = element.find_element(By.XPATH, f'//*[@id="message-content-{serial}"]')
-
-                    BeepBoop(text_el.text)
+                    # # get message serial
+                    # id = element.get_attribute("id")
+                    # # print(id)
+                    # serial = int(id.split('-')[-1])
+                    # # find message
+                    # text_el = element.find_element(By.XPATH, f'//*[@id="message-content-{serial}"]')
+                    print('text = ',element.text)
+                    BeepBoop(element.text)
                 except:
                     pass
                     # print(element.get_attribute("outerHTML"))
@@ -150,13 +145,14 @@ if __name__ == "__main__":
                 print('skip', c)
         if beepboop:
             browser.get(param["urlcommon"])
-            time.sleep(8)
-            input_text = browser.find_element(By.XPATH, '//div[@role="textbox"]')
-            input_text.send_keys(f'beepboop了 別在打字啦!!!{param["name_at"]}')
-            input_text.send_keys(Keys.ENTER)
-            notify(param["token"],"BeepBoop!!!")
-            playmusic(songBeepBoop)
-            break
+            while True:
+                time.sleep(8)
+                input_text = browser.find_element(By.XPATH, '//div[@role="textbox"]')
+                input_text.send_keys(f'beepboop了 別在打字啦!!!{param["name_at"]}')
+                input_text.send_keys(Keys.ENTER)
+                notify(param["token"],"BeepBoop!!!")
+                playmusic(songBeepBoop)
+            # break
         time.sleep(loop_delay)
     notify(param["token"],"finish!!!")
     playmusic(songEnd)
