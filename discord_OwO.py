@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+import threading
 import time
 import atexit
 import random
@@ -16,7 +17,7 @@ songBeepBoop = ["C4","C4","G4","G4","A4","A4","G4"," ", # little star
                "F4","F4","E4","E4","D4","D4","C4"]
 songEnd = ["G4","E4","E4"," ","F4","D4","D4"," ",   # little bee
               "C4","D4","E4","F4","G4","G4","G4"]
-              
+
 
 def getAccount():
     param = dict()
@@ -29,7 +30,7 @@ def close_driver():
     global browser
     browser.quit()
 def BeepBoopName(text):
-    if text.find(param["name"]) != -1: 
+    if text.find(param["name"]) != -1 or text.find(param["name_at"]) != -1: 
         return True
     else : 
         return False
@@ -74,9 +75,8 @@ if __name__ == "__main__":
     browser = webdriver.Chrome(param["chrome_path"])
     browser.get(param["url"])
     
-    browser.implicitly_wait(10)
+    browser.implicitly_wait(15)
     
-    time.sleep(5)
     try:
         button = browser.find_element(By.XPATH, f'//button[@class="{ini_button}"]')
         button.click()
@@ -104,8 +104,8 @@ if __name__ == "__main__":
           {'prob':0.00, 'command':'whb'},
           {'prob':0.00, 'command':'wz'},
           {'prob':1.00, 'command':'owo'},
-          {'prob':0.00, 'command':'ws'},
-          {'prob':0.00, 'command':'wcf h'}]
+          {'prob':1.00, 'command':'ws'},
+          {'prob':1.00, 'command':'wcf h'}]
     
     for i in range(int(param["loop"])):
         input_text = browser.find_element(By.XPATH, '//div[@role="textbox"]')
