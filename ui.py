@@ -33,13 +33,13 @@ class UI(customtkinter.CTk):
 
         #tab
         self.tab_view = MyTabView(master=self)
-        self.tab_view.grid(row=0, column=0, padx=20, pady=20, sticky="ewsn")
+        self.tab_view.grid(row=0, column=0, padx=20, pady=(20,10), sticky="ewsn")
 
         # Use CTkButton instead of tkinter Button
         self.textbox_width = 250
         
         self.button_start = customtkinter.CTkButton(self, text="Start", command=self.buttonStart)
-        self.button_start.grid(row=1, column=0, padx=20, pady=20, sticky="ewsn", columnspan=2)
+        self.button_start.grid(row=1, column=0, padx=20, pady=10, sticky="ewsn", columnspan=2)
 
         # tab account
         self.label_chrome_path = customtkinter.CTkLabel(self.tab_view.tab('account'), text='chrome_path', anchor="w")
