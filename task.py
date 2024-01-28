@@ -118,7 +118,11 @@ def dc_task():
     
     ini_button = "marginTop40__2b1fe button__47891 button_afdfd9 lookFilled__19298 colorBrand_b2253e sizeLarge__9049d fullWidth__7c3e8 grow__4c8a4"
     global browser
-    browser = webdriver.Chrome(param_account["chrome_path"])
+    version = webdriver.__version__.split('.')
+    if int(version[0]) < 4 or (int(version[0]) == 4 and int(version[1]) < 12):
+        browser = webdriver.Chrome(param_account["chrome_path"])
+    else:
+        browser = webdriver.Chrome()
     browser.implicitly_wait(15)
     browser.get(param_account["url"])
     try:
