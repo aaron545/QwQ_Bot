@@ -18,7 +18,7 @@ def getLoadData():
             return yaml.safe_load(yaml_file)
     except:
         open('param.yaml', 'w+', encoding="utf-8")
-        return {
+        default_data = {
             "account": {
                 "chrome_path": "./chromedriver.exe",
                 "email": "your email",
@@ -58,6 +58,8 @@ def getLoadData():
                 }
             ]
         }
+        saveLoadData(default_data)
+        return default_data
     
 def saveLoadData(data):
     with open('param.yaml', 'w') as yaml_file:
@@ -116,7 +118,7 @@ def dc_task():
     param_account = loaded_data['account']
     param_mod = loaded_data['mod']
     
-    ini_button = "marginTop40__2b1fe button__47891 button_afdfd9 lookFilled__19298 colorBrand_b2253e sizeLarge__9049d fullWidth__7c3e8 grow__4c8a4"
+    ini_button = "marginTop8__83d4b marginCenterHorz__4cf72 linkButton_ba7970 button_afdfd9 lookLink__93965 lowSaturationUnderline__95e71 colorLink_b651e5 sizeMin__94642 grow__4c8a4"
     global browser
     version = webdriver.__version__.split('.')
     if int(version[0]) < 4 or (int(version[0]) == 4 and int(version[1]) < 12):
