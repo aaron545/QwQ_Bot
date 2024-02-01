@@ -62,23 +62,25 @@ def getLoadData():
         return default_data
     
 def saveLoadData(data):
-    with open('param.yaml', 'w') as yaml_file:
-        yaml.dump(data, yaml_file, default_flow_style=False)
+    with open('param.yaml', 'w', encoding="utf-8") as yaml_file:
+        yaml.dump(data, yaml_file, default_flow_style=False, allow_unicode=True)
     print("data saved!")
     return True
 def close_driver():
     global browser
     browser.quit()
 def BeepBoopName(text, param_account):
+    print('param_account["name"] = ', param_account["name"])
     if text.find(param_account["name"]) != -1 or text.find(param_account["name_at"]) != -1: 
+        print("beepboop!!!")
         return True
     else : 
         return False
-def BeepBoop(text):
+def BeepBoop(text, param_account):
     global beepboop
     if text.find("Beep Boop. Please DM me") != -1 or text.find("Please complete your captcha") != -1:
         print('find name')
-        if BeepBoopName(text):
+        if BeepBoopName(text, param_account):
             beepboop = True       
 def distorted(text):
     pass
@@ -107,6 +109,7 @@ def notify(token, message):
     response = requests.post(url, headers=headers, data=data)
 
 def dc_task():
+    global beepboop 
     beepboop = False
 
     songBeepBoop = ["C4","C4","G4","G4","A4","A4","G4"," ", # little star
@@ -166,10 +169,11 @@ def dc_task():
                     # # find message
                     # text_el = element.find_element(By.XPATH, f'//*[@id="message-content-{serial}"]')
                     print('text = ',element.text)
-                    BeepBoop(element.text)
+                    BeepBoop(element.text, param_account)
                 except:
                     pass
                     # print(element.get_attribute("outerHTML"))
+            print("beepboop = ", beepboop)
             if beepboop:
                 break
             if command_prob < p:
