@@ -78,7 +78,9 @@ def BeepBoopName(text, param_account):
         return False
 def BeepBoop(text, param_account):
     global beepboop
-    if text.find("Beep Boop. Please DM me") != -1 or text.find("Please complete your captcha") != -1:
+    if (text.find("Beep Boop. Please DM me") != -1 or 
+        text.find("Please complete your captcha") != -1 or
+        text.find("are you a real human?") != -1):
         print('find name')
         if BeepBoopName(text, param_account):
             beepboop = True       
